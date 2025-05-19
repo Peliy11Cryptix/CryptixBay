@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Login / Register</title>
+<style>
+  body {
+    background-color: #000;
+    color: #0f0;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+  input {
+    background: #111;
+    border: 2px solid #0f0;
+    color: #0f0;
+    padding: 10px;
+    margin: 5px 0;
+    font-size: 18px;
+    width: 220px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,255,0,0.3);
+  }
+  button {
+    background: transparent;
+    border: 2px solid #0f0;
+    color: #0f0;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    margin-top: 10px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,255,0,0.3);
+    transition: 0.3s;
+  }
+  button:hover {
+    background-color: #0f0;
+    color: #000;
+    box-shadow: 0 0 15px #0f0;
+  }
+  #message {
+    margin-top: 10px;
+    height: 20px;
+  }
+  h2 {
+    margin: 10px 0 5px;
+  }
+  .logo {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    width: 80px;
+    opacity: 0.8;
+  }
+</style>
+</head>
+<body>
+
+  <h2>Login</h2>
+  <input type="text" id="loginUsername" placeholder="Username" autocomplete="off" />
+  <input type="password" id="loginPassword" placeholder="Password" autocomplete="off" />
+  <button id="loginBtn">Login</button>
+
+  <h2>Register</h2>
+  <input type="text" id="registerUsername" placeholder="New Username" autocomplete="off" />
+  <input type="password" id="registerPassword" placeholder="New Password" autocomplete="off" />
+  <button id="registerBtn">Register</button>
+
+  <div id="message"></div>
+
+  <img src="https://assets.onecompiler.app/43j67s5yr/43j67m5cm/4497a88a-8846-4810-9fbf-3f433067374c.jpg" class="logo" />
+
+<script>
+  const message = document.getElementById('message');
+
+  // Register new user
+  document.getElementById('registerBtn').addEventListener('click', () => {
+    const username = document.getElementById('registerUsername').value.trim();
+    const password = document.getElementById('registerPassword').value;
+
+    if (!username || !password) {
+      message.style.color = 'red';
+      message.textContent = 'Please enter username and password to register.';
+      return;
+    }
+
+    if(localStorage.getItem('user_' + username)) {
+      message.style.color = 'red';
+      message.textContent = 'Username already exists.';
+      return;
+    }
+
+    // Save user to localStorage (simple, not secure)
+    localStorage.setItem('user_' + username, password);
+    message.style.color = 'lime';
+    message.textContent = 'Registered successfully! You can now login.';
+  });
+
+  // Login
+  document.getElementById('loginBtn').addEventListener('click', () => {
+    const username = document.getElementById('loginUsername').value.trim();
+    const password = document.getElementById('loginPassword').value;
+
+    if (!username || !password) {
+      message.style.color = 'red';
+      message.textContent = 'Please enter username and password to login.';
+      return;
+    }
+
+    const storedPassword = localStorage.getItem('user_' + username);
+    if(storedPassword === password) {
+      message.style.color = 'lime';
+      message.textContent = 'Login successful! Redirecting...';
+
+      // Save current logged in user
+      localStorage.setItem('loggedInUser', username);
+
+      // Redirect to dashboard.html after 1 second
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 1000);
+
+    } else {
+      message.style.color = 'red';
+      message.textContent = 'Invalid username or password.';
+    }
+  });
+</script>
+
+</body>
+</html>
